@@ -16,8 +16,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Defiant.vc Recreation",
-  description: "A high-fidelity recreation of the defiant.vc landing page.",
+  title: "Areeq",
+  description: "Areeq - Coming Soon",
 };
 
 export default function RootLayout({
