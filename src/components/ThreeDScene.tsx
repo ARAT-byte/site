@@ -140,7 +140,8 @@ function DustParticles({
             let yRandom = Math.random() - 0.5;
             // Slightly reduced power curve to concentrate more particles in the central flow band
             pos[i * 3 + 1] = Math.sign(yRandom) * Math.pow(Math.abs(yRandom), 1.2) * 25;
-            pos[i * 3 + 2] = (Math.random() - 0.5) * 15;
+            // Spawn strictly at Z <= 0 so dust is entirely behind the logo
+            pos[i * 3 + 2] = (Math.random() - 1.0) * 12;
             rnd[i] = Math.random() * 0.5 + 0.5;
         }
         return [pos, rnd];
