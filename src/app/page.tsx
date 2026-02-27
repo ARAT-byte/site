@@ -1,5 +1,9 @@
-import ThreeDScene from "@/components/ThreeDScene";
+import dynamic from "next/dynamic";
 import TypewriterSection from "@/components/TypewriterSection";
+
+const ThreeDScene = dynamic(() => import("@/components/ThreeDScene"), {
+  ssr: false,
+});
 
 export default function Home() {
   return (
