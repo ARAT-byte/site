@@ -7,7 +7,7 @@ import * as THREE from "three";
 import { SVGLoader } from 'three-stdlib';
 
 function SvgLogo({ groupRef }: { groupRef: React.RefObject<THREE.Group> }) {
-    const svg = useLoader(SVGLoader, '/logo.svg');
+    const svg = useLoader(SVGLoader, '/site/logo.svg');
     const shapes = useMemo(() => svg.paths.flatMap((p: any) => p.toShapes(true)), [svg]);
 
     return (
@@ -229,7 +229,7 @@ export default function ThreeDScene() {
         canvas.height = 512;
 
         const img = new Image();
-        img.src = "/logo.svg";
+        img.src = "/site/logo.svg";
         img.onload = () => {
             if (!isMounted) return; // Prevent state update if component unmounted while image was loading
 
