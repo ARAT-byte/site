@@ -1,0 +1,15 @@
+{
+  "name": "areeq-shopify-bundle",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite"
+  },
+  "dependencies": {
+    "three": "^0.183.1"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}

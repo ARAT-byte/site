@@ -1,0 +1,72 @@
+{% comment %}
+  sections/hero-3d.liquid
+  AreeqAttire — 3D Spinning Logo Hero Section
+  ─────────────────────────────────────────────
+  1. Upload areeq-hero.iife.js to Shopify Admin → Content → Files
+     (or place it in your theme's /assets/ folder)
+  2. Upload logo.svg to your theme's /assets/ folder
+  3. Add this section to your homepage via the Shopify theme editor
+{% endcomment %}
+
+<div
+  id="areeq-hero-container"
+  style="
+    width: 100%;
+    height: 100vh;
+    background: #000000;
+    display: block;
+    overflow: hidden;
+    position: relative;
+  "
+  aria-label="AreeqAttire animated logo"
+  role="img"
+></div>
+
+{%- comment -%} Pass the logo URL as a data attribute to avoid Liquid-in-JS issues {%- endcomment -%}
+<script
+  id="areeq-hero-script"
+  src="{{ 'areeq-hero.iife.js' | asset_url }}"
+  data-logo-url="{{ 'logo.svg' | asset_url }}"
+  defer
+></script>
+
+<script>
+  (function () {
+    function bootHero() {
+      var scriptTag = document.getElementById('areeq-hero-script');
+      var logoUrl = scriptTag ? scriptTag.getAttribute('data-logo-url') : '';
+      var container = document.getElementById('areeq-hero-container');
+
+      if (window.AreeqHero && container && logoUrl) {
+        window.AreeqHero.init(container, logoUrl);
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', bootHero);
+    } else {
+      // Script loaded after DOMContentLoaded (defer can fire after)
+      bootHero();
+    }
+
+    // Also listen for the script load event in case it finishes after DOMContentLoaded
+    var s = document.getElementById('areeq-hero-script');
+    if (s) {
+      s.addEventListener('load', bootHero);
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "3D Hero",
+  "tag": "section",
+  "class": "section-areeq-hero",
+  "settings": [],
+  "presets": [
+    {
+      "name": "3D Hero"
+    }
+  ]
+}
+{% endschema %}
