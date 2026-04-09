@@ -8,19 +8,27 @@
   3. Add this section to your homepage via the Shopify theme editor
 {% endcomment %}
 
-<div
-  id="areeq-hero-container"
-  style="
-    width: 100%;
-    height: 100vh;
-    background: #000000;
-    display: block;
-    overflow: hidden;
+<style>
+  /* Local styles for the hero overlay so we don't pollute the global CSS */
+  .areeq-hero-wrapper {
     position: relative;
-  "
-  aria-label="AreeqAttire animated logo"
-  role="img"
-></div>
+    width: 100%;
+    height: 60vh; /* Reduced height from 100vh */
+    min-height: 400px;
+    background: #000000;
+    overflow: hidden;
+  }
+</style>
+
+<div class="areeq-hero-wrapper">
+  <!-- 3D container -->
+  <div
+    id="areeq-hero-container"
+    style="width: 100%; height: 100%; display: block;"
+    aria-label="AreeqAttire animated logo"
+    role="img"
+  ></div>
+</div>
 
 {%- comment -%} Pass the logo URL as a data attribute to avoid Liquid-in-JS issues {%- endcomment -%}
 <script

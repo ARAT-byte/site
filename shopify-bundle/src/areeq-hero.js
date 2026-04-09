@@ -116,7 +116,7 @@ function buildLogoMesh(logoUrl) {
       (data) => {
         const group = new THREE.Group();
         const innerGroup = new THREE.Group();
-        innerGroup.scale.set(0.004, -0.004, 0.004);
+        innerGroup.scale.set(0.006, -0.006, 0.006);
 
         const material = new THREE.MeshStandardMaterial({
           color: '#d4af37',
@@ -206,7 +206,7 @@ export async function init(container, logoUrl) {
   }
 
   // ── Renderer
-  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(container.clientWidth, container.clientHeight);
   renderer.setClearColor(0x000000);
@@ -289,10 +289,19 @@ export async function init(container, logoUrl) {
     const w = container.clientWidth;
     const h = container.clientHeight;
     camera.aspect = w / h;
+    
+    // Pull camera back on mobile screens so everything fits on the narrower width
+    if (w < 768) {
+      camera.position.z = 25;
+    } else {
+      camera.position.z = 15;
+    }
+    
     camera.updateProjectionMatrix();
     renderer.setSize(w, h);
   }
   window.addEventListener('resize', onResize);
+  onResize(); // Set initial camera distance
 
   // Return a cleanup function (handy if Shopify ever SPAs)
   return function destroy() {

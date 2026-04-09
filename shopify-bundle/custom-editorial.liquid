@@ -1,0 +1,207 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
+  
+  .custom-editorial-{{ section.id }} {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: {{ section.settings.bg_color }};
+    padding: 2rem 2rem;
+    gap: 3rem;
+    color: {{ section.settings.text_color }};
+  }
+
+  @media screen and (min-width: 768px) {
+    .custom-editorial-{{ section.id }} {
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      padding: 3rem 4rem;
+    }
+    .ce-col {
+      flex: 1;
+      display: flex;
+    }
+    .ce-col-left {
+      justify-content: flex-end;
+      align-items: center;
+      text-align: right;
+      padding-right: 4rem;
+    }
+    .ce-col-center {
+      justify-content: center;
+      align-items: center;
+      flex: 1.2; /* make central image slightly larger */
+    }
+    .ce-col-right {
+      justify-content: flex-start;
+      align-items: center;
+      padding-left: 4rem;
+    }
+  }
+
+  /* Typography */
+  .ce-heading {
+    font-size: 3rem;
+    line-height: 1.1;
+    white-space: pre-line;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+    color: inherit;
+  }
+
+  .ce-image-wrapper {
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .ce-image-wrapper img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+  }
+  
+  .ce-image-wrapper svg {
+    width: 100%;
+    height: 600px;
+    background-color: rgba(0,0,0,0.1);
+  }
+
+  .ce-richtext {
+    font-size: 0.9rem;
+    line-height: 2.2;
+    font-family: var(--font-body--family, inherit);
+    color: inherit;
+  }
+  .ce-richtext p {
+    margin: 0;
+  }
+  
+  .ce-cursor {
+    animation: blink 0.8s step-end infinite;
+    font-weight: bold;
+    opacity: 0.5;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+</style>
+
+<div class="custom-editorial-{{ section.id }}">
+  <!-- Left Side: Heading -->
+  {% if section.settings.left_heading != blank %}
+    <div class="ce-col ce-col-left">
+      <h2 class="ce-heading">{{ section.settings.left_heading }}</h2>
+    </div>
+  {% endif %}
+
+  <!-- Center Side: Image Media -->
+  <div class="ce-col ce-col-center">
+    <div class="ce-image-wrapper">
+      {% if section.settings.center_image != blank %}
+        {{ section.settings.center_image | image_url: width: 800 | image_tag: loading: 'lazy' }}
+      {% else %}
+        {{ 'image' | placeholder_svg_tag }}
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Right Side: Text Editor Box -->
+  <div class="ce-col ce-col-right">
+    <div class="ce-richtext">
+      {{ section.settings.right_text }}
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const container = document.querySelector('.custom-editorial-{{ section.id }} .ce-richtext');
+  if(!container) return;
+  
+  const html = container.innerHTML;
+  container.innerHTML = '';
+  
+  let index = 0;
+  let isTag = false;
+  
+  function type() {
+    if (index < html.length) {
+      if (html[index] === '<') isTag = true;
+      if (html[index] === '>') isTag = false;
+      index++;
+      
+      if (isTag) {
+        type(); // Skip delay for HTML tags so they parse instantly
+        return;
+      }
+      
+      container.innerHTML = html.substring(0, index) + '<span class="ce-cursor">|</span>';
+      setTimeout(type, 15); // Adjust typing speed here (ms)
+    } else {
+      container.innerHTML = html; // Remove cursor when done
+    }
+  }
+  
+  // Only start typing when the section scrolls into view
+  let observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting) {
+        setTimeout(type, 400); // Tiny delay before starting
+        observer.unobserve(entry.target);
+      }
+    });
+  });
+  
+  observer.observe(container);
+});
+</script>
+
+{% schema %}
+{
+  "name": "Editorial Product Info",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#e7e5df"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#111111"
+    },
+    {
+      "type": "textarea",
+      "id": "left_heading",
+      "label": "Left Heading",
+      "default": "for the\nlong game",
+      "info": "Leave blank to hide this text and shift the image left."
+    },
+    {
+      "type": "image_picker",
+      "id": "center_image",
+      "label": "Central Media Image"
+    },
+    {
+      "type": "richtext",
+      "id": "right_text",
+      "label": "Right Info Box",
+      "info": "This is the text box you requested.",
+      "default": "<p>01 &nbsp;Workshirt &nbsp; Earth<br/>02 &nbsp;Workshirt &nbsp; Navy<br/>03 &nbsp;Coming Soon &nbsp; Natural</p>"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Editorial Product Info"
+    }
+  ]
+}
+{% endschema %}
